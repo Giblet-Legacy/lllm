@@ -36,7 +36,7 @@ Fixtures and helpers:
     24. _manifest  — FIXTURE.md table rows
 
 Tier:     Tier 1 — Consumer (LLLM)
-Spec:     SPEC.md 0.1.0
+Spec:     SPEC.md 0.1.1
 Licence:  MSL-1.0
 Author:   James Gilbert (Giblets Forge)
 """
@@ -259,7 +259,8 @@ def test_parse_table():
         ("how does lllm work?", "self_query"),
         ("is the sky blue?", "question"), ("Where is the sea", "question"), ("the sea is blue?", "question"),
         ("the sky is blue", "statement"), ("not bad", "statement"),
-        ("i don't understand", "clarify"), ("what do you mean?", "question"),
+        ("i don't understand", "clarify"), ("what do you mean?", "clarify"), ("can you clarify?", "clarify"),
+        ("which one?", "clarify"), ("which one is bigger?", "question"), ("what do you mean by sky?", "clarify"),
         ("hello there", "greeting"), ("hey", "greeting"), ("good evening", "greeting"),
         ("bye", "farewell"), ("goodnight", "farewell"), ("cheers", "farewell"), ("thank you", "farewell"),
         ("", "question"),

@@ -29,10 +29,20 @@ The trace package is `traces/` (not `trace/`, SPEC §12a); FIXTURE.md is the tes
   v0.2. Recorded as a Known Limitation.
 - `trace_query` is a first-class intent, distinct from `self_query`.
   "How did you work that out?" answers from the current turn's trace.
-- Intent precedence: trace_query > self_query > question > statement >
-  clarify > greeting > farewell.
+- Intent precedence (SPEC 0.1.1): trace_query > self_query > clarify >
+  question > statement > greeting > farewell.
 - v0.4 conversation state is in-session only. Persistence arrives at
   v0.5 with signed traces.
+
+## Decisions 2026-11-13 (NOTES Q5–Q9)
+- Users reach the Voice through The Legacy (its Voice panel), not a
+  `lllm` command; the old n-gram engine keeps `lllm`.
+- LLLM-generated text (dream / think / reason) is stored in its own
+  P9 database, `$FORGE_HOME/lllm.db`, always as OPINION. v0.1 reads
+  only `forge.db`.
+- Polarity is written by the Cockpit for FACT, COUNTER and CONTEXT
+  claims only; other faces are never spoken as fact.
+- James signs v0.5 traces with the operator key.
 
 ## Design principles
 1. Truth from claims, fluency from counts. Locked slots enforce it.

@@ -2,7 +2,27 @@
 
 CHANGELOG.md — build history for LLLM, latest entry at top.
 
-## [Unreleased] — v0.1.0 build (2026-11-13)
+## [Unreleased] — SPEC 0.1.1 (2026-11-13)
+
+### Good
+- James answered NOTES Q5–Q9 ("lllm should be stored in a different db
+  and be opinions, lllm commands go via the legacy, i sign, yo
+  decide"). Recorded in NOTES and CLAUDE.md.
+- SPEC 0.1.1, decided on James's delegation: `clarify` above `question`
+  with anchored patterns (Q9); clarify and cite-both need the same
+  subject (§7); `Yes.`/`No.` only for yes/no questions (§9.1).
+- First real conversation through The Legacy (`/api/voice`) on a
+  Cockpit-written forge.db: FACT and CONTEXT claims answered with
+  citations; FICTION and OPINION refused (`polarity_missing`). 20/20.
+
+### Bad
+- That conversation found the two §7/§9.1 answer bugs ("what is blue?"
+  → "Yes. sky is blue."), which the 0.1.0 tests had not covered.
+
+### Ugly
+- (none)
+
+## [v0.1.0 build] — 2026-11-13
 
 ### Good
 - SPEC v0.1.0 signed off by James, after pre-sign-off corrections

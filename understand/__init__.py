@@ -5,8 +5,8 @@ Function:
     Turns raw input into a structured parse: intent, terms, entities,
     negation and the raw text (SPEC §5, §6 "Terms"). Rule-based and
     deterministic: regex patterns per intent, chosen by the locked
-    precedence trace_query > self_query > question > statement >
-    clarify > greeting > farewell.
+    precedence (SPEC 0.1.1) trace_query > self_query > clarify >
+    question > statement > greeting > farewell.
 
 Public API:
     1. tokenise(text) -> list[str]
@@ -18,14 +18,14 @@ Internal helpers:
 
 Tier:     Tier 1 — Consumer (LLLM), layer 1
 Depends:  standard library only
-Spec:     SPEC.md 0.1.0 §5, §6
+Spec:     SPEC.md 0.1.1 §5, §6
 Licence:  MSL-1.0
 Author:   James Gilbert (Giblets Forge)
 """
 
 import re
 
-PRECEDENCE = ("trace_query", "self_query", "question", "statement", "clarify", "greeting", "farewell")
+PRECEDENCE = ("trace_query", "self_query", "clarify", "question", "statement", "greeting", "farewell")  # SPEC 0.1.1
 
 PATTERNS = {
     "trace_query": [r"how (did|do) you (work|know|figure) (that|this|it) out", r"why did you (say|answer|reply)",
@@ -33,7 +33,7 @@ PATTERNS = {
                     r"show (me )?your (trace|reasoning)"],
     "self_query": [r"who are you", r"what are you", r"what can you do", r"how (do|does) (you|lllm) work",
                    r"tell me about (yourself|lllm)"],
-    "clarify": [r"what do you mean", r"can you (clarify|explain)", r"i don'?t understand", r"which one"],
+    "clarify": [r"^what do you mean", r"^can you (clarify|explain)", r"^i don'?t understand", r"^which one\b\W*$"],
     "greeting": [r"^(hi|hello|hey|hiya|good (morning|afternoon|evening))\b", r"^(greetings|howdy)\b"],
     "farewell": [r"^(bye|goodbye|see you|good ?night|cheers)\b", r"^(thanks|thank you|cheers)\b"],
 }

@@ -129,8 +129,8 @@ P13 Keystone Gate (contradiction tagging)
 - Key-term and entity extraction, including negation detection
 - **Output:** a structured parse (intent, terms, entities, negation,
   raw text)
-- **Intent precedence:** trace_query > self_query > question >
-  statement > clarify > greeting > farewell
+- **Intent precedence:** trace_query > self_query > clarify >
+  question > statement > greeting > farewell
 
 ### 2. Know: the claim layer
 - Reads claims from P9

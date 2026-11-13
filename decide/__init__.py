@@ -22,7 +22,7 @@ Internal helpers:
 
 Tier:     Tier 1 — Consumer (LLLM), layer 3
 Depends:  standard library; know (local)
-Spec:     SPEC.md 0.1.0 §7, §8, §9
+Spec:     SPEC.md 0.1.1 §7, §8, §9
 Licence:  MSL-1.0
 Author:   James Gilbert (Giblets Forge)
 """
@@ -30,6 +30,8 @@ Author:   James Gilbert (Giblets Forge)
 import os
 
 import know
+
+YES_NO_STARTS = {"is", "are", "was", "were", "do", "does", "did", "can", "could", "will", "would", "should"}
 
 
 # ---------------------------------------------------------------------------
@@ -79,8 +81,9 @@ def _answer(parse, loaded):
     if len(ranked) > 1:
         top2 = ranked[1]
         margin = _delta() * top1["score"]
-        if top1["score"] - top2["score"] <= margin:
-            a, b = top1["claim"], top2["claim"]
+        a, b = top1["claim"], top2["claim"]
+        same_subject = a["subject"].lower() == b["subject"].lower()  # SPEC 0.1.1 §7
+        if top1["score"] - top2["score"] <= margin and same_subject:
             if a["object"].lower() != b["object"].lower() or a["polarity"] != b["polarity"]:
                 slots = {"subject": a["subject"], "predicate": a["predicate"], "object1": _obj(a),
                          "object2": _obj(b), "claim_id1": _short(a["claim_id"]), "claim_id2": _short(b["claim_id"])}
@@ -89,7 +92,8 @@ def _answer(parse, loaded):
             pair = top2
     claim = top1["claim"]
     cited = [claim] + ([pair["claim"]] if pair else [])
-    names_object = top1["o"] == 1 and not parse["negation"]
+    yes_no = bool(parse["terms"]) and parse["terms"][0] in YES_NO_STARTS  # SPEC 0.1.1 §9.1
+    names_object = yes_no and top1["o"] == 1 and not parse["negation"]
     if claim["polarity"] == "negate":
         template = "answer_no" if names_object else "answer_state_negate"
     else:

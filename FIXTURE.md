@@ -49,12 +49,13 @@ No `agent://lllm` claims: the self-model is not bootstrapped.
 | what is the door? | question | clarify | clarify | door_shut,door_open | - |
 | is the tide late? | question | answer | answer_yes | tide_b,tide_a | - |
 | what is a volcano? | question | unknown | unknown_loaded | - | - |
+| what is blue? | question | answer | answer_state | sea | - |
 | who are you? | self_query | unknown | unknown_loaded | - | - |
 | the river is wide | statement | acknowledge | acknowledge | - | - |
 | hello | greeting | social | social_greeting | - | - |
 | thanks | farewell | social | social_farewell | - | - |
 | cheers | farewell | social | social_farewell | - | - |
-| what do you mean? | question | unknown | unknown_loaded | - | - |
+| what do you mean? | clarify | unknown | unknown_loaded | - | - |
 <!-- manifest:end -->
 
 Notes on the rows:
@@ -66,6 +67,10 @@ Notes on the rows:
   disagree on object, so `clarify` fires. Equal scores cite the more
   recent claim first.
 - "is the tide late?": two claims agree, so `answer` cites both.
-- "what do you mean?": under the locked intent precedence (question
-  above clarify) a clarify phrase that is also a question parses as a
-  question. Pinned here; see NOTES Q9.
+- "what is blue?": sky and sea score equally but have different
+  subjects, so neither clarify nor cite-both applies (SPEC 0.1.1 §7):
+  the most recent answers alone, and a WH-question never gets "Yes."
+  (§9.1).
+- "what do you mean?": a `clarify` intent (SPEC 0.1.1). In a fresh
+  session there is no previous reply to explain, so the plan is
+  `unknown`. (Under SPEC 0.1.0 it parsed as a question; NOTES Q9.)

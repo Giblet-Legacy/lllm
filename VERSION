@@ -1,5 +1,6 @@
 # VERSION — lllm (Tier 1: LLLM)
 # Function: the current release version of this consumer. Advances only on freeze.
 # 0.1.0-dev means the repo is in build and has not yet been signed off at v0.1.0.
+# 0.1.1-dev: SPEC 0.1.1 (clarify precedence, same-subject rule, yes/no rule). Termux run before freeze.
 
-0.1.0-dev
+0.1.1-dev

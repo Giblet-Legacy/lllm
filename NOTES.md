@@ -123,17 +123,27 @@ verify.
   Cockpit records `polarity` only for FACT, COUNTER and CONTEXT claims,
   so the others are excluded as `polarity_missing` until a later SPEC
   reads faces. Owner: James.
+  **Resolved 2026-11-13 — James: "lllm should be stored in a different db and be
+  opinions"; the face rule decided by the VS Code AI on James's delegation ("i sign, yo decide").** Polarity only for FACT /
+  COUNTER / CONTEXT; LLLM output goes to `lllm.db` as OPINION.
 - **Q6. Two LLLMs, one name.** `JamesTheGiblet/lllm` (the n-gram
   engine: `lllm gen`, `lllm info`, used by the Cockpit's dream/think/
   reason and the Weaver) and this repo (the Voice) both want the
   `lllm` command. Which owns it? Owner: James.
+  **Resolved 2026-11-13 — James: "lllm commands go via the legacy".** The Voice is
+  used through The Legacy's Voice panel; the old engine keeps `lllm`.
 - **Q7. Who signs v0.5 traces?** The stack's ledger has one signer,
   the operator key. Signing traces needs that key (a passphrase per
   session) or a separate consumer ledger anchored to the root (P5
   NOTES Q1). Owner: James.
+  **Resolved 2026-11-13 — James: "i sign".** v0.5 traces are signed with the
+  operator key.
 - **Q8. Who writes polarity?** No Forge Stack code writes
   `capsule.polarity` yet, so on a real `forge.db` every claim is
   `polarity_missing`. Proposed: a Cockpit v1.3 layer. Owner: James.
+  **Resolved 2026-11-13, decided by the VS Code AI on James's delegation ("i sign, yo decide"):** the Cockpit's current layer (v1.2, not yet frozen)
+  writes it: `remember` and `inbox commit` record `polarity` for FACT,
+  COUNTER and CONTEXT ("is not" → negate, `--polarity` overrides).
 
 - **Q9. The clarify intent is mostly unreachable.** With the locked
   precedence (question above clarify), "what do you mean?", "can you
@@ -141,6 +151,8 @@ verify.
   understand" reaches `clarify`. Proposed: move `clarify` above
   `question` in a SPEC v0.1.1 (a locked commitment, so James's call).
   Pinned in FIXTURE.md. Owner: James.
+  **Resolved 2026-11-13, decided by the VS Code AI on James's delegation ("i sign, yo decide"):** SPEC 0.1.1 moves `clarify` above `question`
+  and anchors its patterns.
 
 ## What LLLM refuses to be
 
