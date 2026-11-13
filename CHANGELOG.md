@@ -2,7 +2,43 @@
 
 CHANGELOG.md — build history for LLLM, latest entry at top.
 
-## [Unreleased]
+## [Unreleased] — v0.1.0 build (2026-11-13)
+
+### Good
+- SPEC v0.1.0 signed off by James, after pre-sign-off corrections
+  marked in the SPEC (§5.4, §5.7, §6, §7, §8, §9.1, §9.4, §11, §12,
+  §12a). The two that change answers: a candidate must match the
+  subject or object, and `Yes.`/`No.` only when the question names the
+  claim's object.
+- Phase 1: `fixture_p9.py` builds the fixture P9 with real P9 code
+  (substrate_v3), covering every ROADMAP case; `FIXTURE.md` is the
+  manifest, and a test checks every row against reality.
+- v0.1 built in pipeline order: `understand/`, `know/`, `decide/`,
+  `speak/`, `traces/`, `lllm.py` (REPL, `--once`). Read-only P9 via
+  `Path.as_uri()` + `mode=ro`; ISO 8601 `created_at`; polarity
+  required; locked slots with a verbatim check and bare-template
+  fallback; console trace on every reply.
+- `test_lllm.py`: 20 tests (every SPEC §13 criterion, the ROADMAP
+  mini-gates, the manifest), written first and run red. 20/20 pass on
+  the laptop from the repo and from its parent. Runtime imports are
+  standard library only (checked by reading the source).
+
+### Bad
+- Not yet run in Termux, which SPEC §13 requires for freeze. VERSION
+  stays 0.1.0-dev.
+- On a real `forge.db` written by the Cockpit, every claim is
+  `polarity_missing` (checked 2026-11-13): no Forge Stack code writes
+  polarity yet (NOTES Q8).
+- The locked intent precedence makes the `clarify` intent unreachable
+  for question-shaped phrases ("what do you mean?" parses as a
+  question). Pinned in FIXTURE.md; NOTES Q9.
+
+### Ugly
+- The fixture manifest caught a mistake in the manifest itself on the
+  first run ("is the sky green?" also matches the superseded "grass is
+  green"); the manifest was corrected, not the code.
+
+## [Contract] — 2026-11-13
 
 ### Good
 - Repository scaffolded: `Giblet-Legacy/lllm` created as Tier 1

@@ -26,36 +26,38 @@ starts until the step before it is frozen.
 **Goal:** a written contract that v0.1 can be built and tested against.
 
 **SPEC must contain:**
-- [ ] **P9 mapping table**, field by field: LLLM field → P9 source → default
-- [ ] **Status mapping:** `is_active` + `superseded_by` → `active` /
+- [x] **P9 mapping table**, field by field: LLLM field → P9 source → default
+- [x] **Status mapping:** `is_active` + `superseded_by` → `active` /
       `superseded` / `inactive`
-- [ ] **Polarity rule:** a claim with no `capsule.polarity` is excluded
+- [x] **Polarity rule:** a claim with no `capsule.polarity` is excluded
       from answers, and the trace records it as `polarity_missing`
-- [ ] **Capsule shape:** which keys LLLM expects inside `capsule`
+- [x] **Capsule shape:** which keys LLLM expects inside `capsule`
       (`subject`, `object`, optional `predicate`, `polarity`)
-- [ ] **Intent rules:** the patterns that fire each intent, plus their
+- [x] **Intent rules:** the patterns that fire each intent, plus their
       precedence when several match
-- [ ] **Intent precedence:** `trace_query > self_query > question >
+- [x] **Intent precedence:** `trace_query > self_query > question >
       statement > clarify > greeting > farewell`
-- [ ] **Matching:** how the match score is computed (terms, subject,
+- [x] **Matching:** how the match score is computed (terms, subject,
       object), with its range and a worked example
-- [ ] **Ranking:** v0.1 ranks by match score, then breaks ties on
+- [x] **Ranking:** v0.1 ranks by match score, then breaks ties on
       `created_at`
-- [ ] **Clarify rule:** δ = 0.10, the definition of "disagree" (object
+- [x] **Clarify rule:** δ = 0.10, the definition of "disagree" (object
       or polarity differs), and the agree case (answer citing both)
-- [ ] **Response plans:** trigger conditions for all seven plans
+- [x] **Response plans:** trigger conditions for all seven plans
       (`answer`, `explain_self`, `trace`, `clarify`, `unknown`,
       `acknowledge`, `social`)
-- [ ] **Template set:** one or more templates per plan, with named slots
-- [ ] **Locked-slot contract:** which slots are locked, how they're
+- [x] **Template set:** one or more templates per plan, with named slots
+- [x] **Locked-slot contract:** which slots are locked, how they're
       marked in templates, and that they must render verbatim
-- [ ] **Trace format:** fields and console layout for v0.1
-- [ ] **P9 access:** opened read-only, so LLLM physically cannot write
-- [ ] **v0.1 acceptance criteria** (copied from below and expanded into
+- [x] **Trace format:** fields and console layout for v0.1
+- [x] **P9 access:** opened read-only, so LLLM physically cannot write
+- [x] **v0.1 acceptance criteria** (copied from below and expanded into
       test cases)
 
 **Gate:** you sign off the SPEC. It's then frozen for v0.1, and changes
 need a version bump.
+
+**Signed off by James, 2026-11-13.**
 
 ---
 
@@ -64,11 +66,11 @@ need a version bump.
 **Goal:** a skeleton that runs end to end and returns `unknown` for
 everything.
 
-- [ ] Directory layout as in the README
-- [ ] `lllm.py` REPL: read input, run the pipeline, print the reply
+- [x] Directory layout as in the README
+- [x] `lllm.py` REPL: read input, run the pipeline, print the reply
       and trace
-- [ ] Stub for each layer with its input and output types defined
-- [ ] **Fixture P9:** a small SQLite file using the real P9 schema,
+- [x] Stub for each layer with its input and output types defined
+- [x] **Fixture P9:** a small SQLite file using the real P9 schema,
       seeded with test claims:
   - active claims
   - a superseded pair
@@ -76,14 +78,17 @@ everything.
   - a claim with no polarity
   - two competing claims (one pair that disagrees, one that agrees)
   - zero `agent://lllm` claims, so the bootstrap case gets tested
-- [ ] `test_lllm.py` harness running against the fixture
-- [ ] **Fixture manifest:** documented list of test queries and their
+- [x] `test_lllm.py` harness running against the fixture
+- [x] **Fixture manifest:** documented list of test queries and their
       expected outcomes (candidates, statuses, exclusions). The fixture
       is a contract, not just data.
 
 **Gate:** the REPL runs in Termux, returns `unknown` for every
 question, the tests run and fail as expected, and the fixture manifest
 matches reality.
+
+**2026-11-13 (laptop):** built; tests ran red, then 20/20 green; the
+manifest matches reality. Termux run outstanding.
 
 ---
 
@@ -92,58 +97,58 @@ matches reality.
 Build in pipeline order. Each layer has its own mini-gate.
 
 ### 1. Understand
-- [ ] Tokeniser
-- [ ] Intent rules for `greeting`, `question`, `statement`,
+- [x] Tokeniser
+- [x] Intent rules for `greeting`, `question`, `statement`,
       `self_query`, `trace_query`, `clarify`, `farewell`
-- [ ] Term, entity and negation extraction
+- [x] Term, entity and negation extraction
 - **Mini-gate:** a table of sample inputs maps to the expected parses
   (including intent precedence when multiple match)
 
 ### 2. Know
-- [ ] P9 reader, read-only, applying the mapping and status tables
-- [ ] Filters to `active` and drops claims with polarity missing
-- [ ] Match scoring, with ranking by score then `created_at`
-- [ ] ISO 8601 `created_at` parsed via `datetime.fromisoformat`
+- [x] P9 reader, read-only, applying the mapping and status tables
+- [x] Filters to `active` and drops claims with polarity missing
+- [x] Match scoring, with ranking by score then `created_at`
+- [x] ISO 8601 `created_at` parsed via `datetime.fromisoformat`
 - **Mini-gate:** fixture queries return the expected ranked candidates
 
 ### 3. Decide
-- [ ] All seven plans
-- [ ] Clarify rule with δ
-- [ ] Trace plan returns the previous turn's trace
+- [x] All seven plans
+- [x] Clarify rule with δ
+- [x] Trace plan returns the previous turn's trace
 - **Mini-gate:** each plan fires on its fixture case and on nothing else
 
 ### 4. Speak
-- [ ] Templates with locked slots
-- [ ] Verbatim slot rendering, checked by assertion
+- [x] Templates with locked slots
+- [x] Verbatim slot rendering, checked by assertion
 - **Mini-gate:** every template renders with its slots intact
 
 ### Trace
-- [ ] Console trace on every reply
+- [x] Console trace on every reply
 
 ### v0.1 acceptance criteria
-- [ ] Empty P9: every question returns `unknown`
-- [ ] A question matched by one active claim gets `answer`, citing its
+- [x] Empty P9: every question returns `unknown`
+- [x] A question matched by one active claim gets `answer`, citing its
       `claim_id`
-- [ ] Superseded and inactive claims are never used
-- [ ] A claim with polarity missing is never used, and the trace says
+- [x] Superseded and inactive claims are never used
+- [x] A claim with polarity missing is never used, and the trace says
       why (`polarity_missing`)
-- [ ] Two competing claims within δ that disagree get `clarify`
-- [ ] Two competing claims within δ that agree get `answer`, citing
+- [x] Two competing claims within δ that disagree get `clarify`
+- [x] Two competing claims within δ that agree get `answer`, citing
       both
-- [ ] A self-query with no `agent://lllm` claims gets `unknown`
-- [ ] A self-query once `agent://lllm` claims are seeded gets
+- [x] A self-query with no `agent://lllm` claims gets `unknown`
+- [x] A self-query once `agent://lllm` claims are seeded gets
       `explain_self`, with citations
-- [ ] A `trace_query` right after an `answer` returns the trace of that
+- [x] A `trace_query` right after an `answer` returns the trace of that
       answer
-- [ ] A statement gets the fixed `acknowledge` reply, and P9 is
+- [x] A statement gets the fixed `acknowledge` reply, and P9 is
       unchanged (verified by hash)
-- [ ] Greetings, thanks and farewells get `social`
-- [ ] Every reply prints a full trace: parse, candidates, plan and
+- [x] Greetings, thanks and farewells get `social`
+- [x] Every reply prints a full trace: parse, candidates, plan and
       reason, template, slots
-- [ ] No imports outside the standard library and P9
+- [x] No imports outside the standard library and P9
 - [ ] All tests pass in Termux
 
-**Freeze → tag `v0.1.0`.**
+**Freeze → tag `v0.1.0`.** Waiting on the Termux run only.
 
 ---
 
@@ -152,7 +157,9 @@ Build in pipeline order. Each layer has its own mini-gate.
 There are three milestones, and each one ships alone.
 
 ### v0.2-A: λ ranking (+ P14)
-- [ ] SPEC: the P14 call contract (inputs, outputs, failure behaviour)
+- [ ] SPEC: the P14 call contract (inputs, outputs, failure behaviour).
+      P14 V3 (`leighton_engine_v3`) requires `time_unit`; the stack
+      convention is days (`STACK_CLAIM_K = 0.1`)
 - [ ] Ranking becomes match × λ, still breaking ties on `created_at`
 - [ ] If P14 is unavailable, fall back to v0.1 ranking, and the trace
       says so
@@ -165,7 +172,9 @@ There are three milestones, and each one ships alone.
 - [ ] SPEC: which P9 capsules are verified, and what happens on
       failure
 - [ ] Each loaded claim's signature is checked with P2
-      (`verify_capsule`) before the claim is used
+      (`verify_capsule`) before the claim is used. P9 v3's
+      `list_claims(verify=True)` already does this (hash, canonical
+      form, signer, P2 signature) and could replace the raw reader
 - [ ] A claim that fails verification is excluded, and the trace
       records `signature_invalid`
 - [ ] The v0.1 "trusts P9" limitation is removed from the Known
@@ -194,8 +203,11 @@ Split further if needed: (c1) wrap the old engine for slot-fill mode,
 - [ ] SPEC: the proposal format, gate tags and HAL seal contract
 - [ ] A statement becomes a proposal
 - [ ] P13 Keystone Gate tags each proposal `clean` or
-      `contradicts: <claim_id>`, and never rejects
-- [ ] Proposals go into the HAL buffer as `pending`
+      `contradicts: <claim_id>`, and never rejects (P13 v2
+      `find_contradiction` tags without raising)
+- [ ] Proposals go into the HAL buffer as `pending`. Candidate: the
+      Cockpit v1.2 inbox (`forge.draft/1`) and `propose`/`approve`, plus
+      P9 SPEC_V3 §3's attestation rule, rather than a second buffer
 - [ ] P15 approve or reject produces a signed seal in P4
 - [ ] An approved `contradicts` proposal supersedes the old claim in
       the same seal

@@ -19,6 +19,8 @@ P13, P14, P15, P4, P1, P2). It does not rewrite them.
 - v0.5: signed traces (P1, P2, P4).
 
 A v0.1 build imports nothing outside the standard library and P9.
+Run: `python lllm.py` (REPL) or `--once "text"`; tests: `python -m pytest -q`.
+The trace package is `traces/` (not `trace/`, SPEC §12a); FIXTURE.md is the test contract.
 
 ## Architectural commitments (locked)
 - Polarity is required. A claim with no `capsule.polarity` is excluded

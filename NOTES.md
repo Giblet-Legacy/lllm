@@ -104,6 +104,44 @@ verify.
   topic, LLLM must ask "which topic?" rather than guess. This arrives
   with v0.4 state.
 
+## Decisions at sign-off (2026-11-13)
+
+- SPEC v0.1.0 signed off by James after pre-sign-off corrections, each
+  marked in the SPEC. The two that change answers: a candidate must
+  match the subject or object (term-only matches such as "is" made
+  every claim a candidate), and `Yes.`/`No.` is used only when the
+  question names the claim's object.
+- `traces/` instead of `trace/` (SPEC §12a): avoids shadowing the
+  standard-library `trace` module.
+- The `clarify` intent answers from the last turn's trace (SPEC §8).
+
+## Open questions raised at sign-off
+
+- **Q5. Which faces may be spoken as fact?** v0.1 ignores the P13 face
+  keys (SPEC §3), so an active UNKNOWN (a dream), OPINION or FICTION
+  claim with a polarity would be answered like a FACT. Proposed: the
+  Cockpit records `polarity` only for FACT, COUNTER and CONTEXT claims,
+  so the others are excluded as `polarity_missing` until a later SPEC
+  reads faces. Owner: James.
+- **Q6. Two LLLMs, one name.** `JamesTheGiblet/lllm` (the n-gram
+  engine: `lllm gen`, `lllm info`, used by the Cockpit's dream/think/
+  reason and the Weaver) and this repo (the Voice) both want the
+  `lllm` command. Which owns it? Owner: James.
+- **Q7. Who signs v0.5 traces?** The stack's ledger has one signer,
+  the operator key. Signing traces needs that key (a passphrase per
+  session) or a separate consumer ledger anchored to the root (P5
+  NOTES Q1). Owner: James.
+- **Q8. Who writes polarity?** No Forge Stack code writes
+  `capsule.polarity` yet, so on a real `forge.db` every claim is
+  `polarity_missing`. Proposed: a Cockpit v1.3 layer. Owner: James.
+
+- **Q9. The clarify intent is mostly unreachable.** With the locked
+  precedence (question above clarify), "what do you mean?", "can you
+  clarify?" and "which one?" all parse as questions; only "i don't
+  understand" reaches `clarify`. Proposed: move `clarify` above
+  `question` in a SPEC v0.1.1 (a locked commitment, so James's call).
+  Pinned in FIXTURE.md. Owner: James.
+
 ## What LLLM refuses to be
 
 - A general-purpose chatbot. It answers from claims or says `unknown`.

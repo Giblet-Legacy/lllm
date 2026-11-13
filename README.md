@@ -16,7 +16,7 @@ No neural nets. No black-box weights. Just counting, rules, and claims.
 | **Consumed by** | The Cockpit, The Legacy, any conversational surface |
 | **Licence** | MSL-1.0 |
 | **Author** | James Gilbert (Giblets Forge) |
-| **Status** | 0.1.0-dev (in build, pre-freeze) |
+| **Status** | 0.1.0-dev: v0.1 built, 20/20 tests on the laptop; Termux run before freeze |
 
 ### Dependencies by version
 
@@ -268,8 +268,10 @@ lllm/
 ├── decide/         # dialogue manager, clarify rule, P13 gate (v0.3)
 ├── speak/          # templates + locked slots (v0.1), n-gram (v0.2)
 ├── buffer/         # proposal buffer (v0.3)
-├── trace/          # per-reply trace records
+├── traces/         # per-reply trace records (not trace/: SPEC §12a)
 ├── lllm.py         # entry point / REPL
+├── fixture_p9.py   # builds the fixture P9 (tests only)
+├── FIXTURE.md      # the fixture manifest: queries and expected outcomes
 └── test_lllm.py    # test suite
 
 ```

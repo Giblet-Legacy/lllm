@@ -116,6 +116,11 @@ A sentence ending in `?`, or starting with a WH-word:
 A sentence that is not a question, not social, and does not contain
 `not` alone as a filler (e.g. "not bad" is a statement).
 
+Implementation rule: `statement` fires only if no `clarify`,
+`greeting` or `farewell` pattern matches. Otherwise "hello" (not a
+question) would be a statement, since `statement` has higher
+precedence.
+
 ### 5.5 `clarify`
 Patterns:
 - `what do you mean`
@@ -133,8 +138,9 @@ Patterns:
 - `^(bye|goodbye|see you|good ?night|cheers)\b`
 - `^(thanks|thank you|cheers)\b`
 
-(`cheers` matches both `greeting` and `farewell`; precedence puts
-`farewell` after `greeting`, so `cheers` alone fires `greeting`.)
+(`cheers` appears twice above but in no `greeting` pattern, so
+`cheers` alone fires `farewell` (social). Corrected before sign-off:
+the draft said it fired `greeting`.)
 
 ## 6. Matching and ranking
 
@@ -150,7 +156,17 @@ For a `question` parse, LLLM matches against each active claim:
 
 Match score = `3*s + 2*o + t`, where `s`, `o` ∈ {0, 1}, `t` ∈ [0, 5].
 
-Only claims with score > 0 are candidates.
+Only claims with **s = 1 or o = 1** are candidates. A claim that
+shares only terms (for example the word "is") is not a candidate.
+(Corrected before sign-off: with "score > 0", every claim shares "is"
+with "is the moon cheese?", so a stored "sky is blue" would have been
+answered as "Yes. sky is blue".)
+
+**Terms** are the lower-cased word tokens of the input (letters,
+digits, `'`, `:`, `/`, `.`, `-`; trailing punctuation stripped).
+**Subject match** holds when the claim's subject, lower-cased and
+tokenised the same way, appears as a contiguous run of input terms.
+Object match likewise. `t` counts distinct shared tokens.
 
 **Ranking v0.1:** sort by match score descending, then by `created_at`
 descending (most recent wins).
@@ -175,7 +191,8 @@ Let `top1` and `top2` be the two highest-scoring candidates.
 2. `top1` and `top2` disagree on **object** or **polarity**.
 
 **Agree case:** if `top1` and `top2` score within δ and agree on both
-object and polarity, LLLM answers and cites both.
+object and polarity, LLLM answers and cites both: the `claim_id` slot
+holds both ids, comma-separated (`[a1b2c3d4e5f6, 0f9e8d7c6b5a]`).
 
 **No-clarify case:** if only one candidate exists, or the score gap
 exceeds δ, LLLM answers with `top1` only.
@@ -196,6 +213,14 @@ The dialogue manager fires exactly one plan per turn.
 | `acknowledge` | Intent is `statement` |
 | `social` | Intent is `greeting` or `farewell` |
 
+**Intent `clarify`** ("what do you mean?") fires the `trace` plan when
+a previous reply exists (it explains what the last reply rested on),
+else `unknown`. (The draft listed the intent but gave it no plan.)
+
+**`explain_self`:** self-model candidates are the active, polarised
+claims with `subject = agent://lllm`, ranked by term match then
+`created_at`; the reply renders the top three, one template each.
+
 ## 9. Templates
 
 One or more templates per plan. `{slot}` marks a locked slot.
@@ -208,6 +233,19 @@ One or more templates per plan. `{slot}` marks a locked slot.
 If `polarity == "negate"`, the template is rendered as:
 - `No. {subject} {predicate} not {object}. [{claim_id}]`
 
+**Template choice** (deterministic):
+- `answer_yes` (`Yes. …`) or `answer_no` (`No. … not …`): the
+  question names the claim's object (o = 1) and has no negation of its
+  own. "Is the sky blue?" with "sky is blue" → `Yes.`
+- `answer_state` (`{subject} {predicate} {object}.`, or `… not …`
+  for negate): every other answer. "Is the sky green?" with only
+  "sky is blue" → "sky is blue.", never "Yes." (corrected before
+  sign-off).
+- `From the substrate: …` is kept for `explain_self` fallbacks only.
+
+**Cited ids** in replies are the first 12 hex characters of
+`claim_id` (as a short git hash); the trace carries the full id.
+
 ### 9.2 `explain_self`
 - `{subject} {predicate} {object}. [{claim_id}]`
 
@@ -218,8 +256,9 @@ the trace.)
 - `I have more than one active claim that matches. One says {subject} {predicate} {object1} [{claim_id1}], another says {subject} {predicate} {object2} [{claim_id2}]. Which one do you mean?`
 
 ### 9.4 `unknown`
-- `I don't have an active claim for that.`
-- `I can't answer that from the substrate.`
+- `I don't have an active claim for that.` (claims were loaded)
+- `I can't answer that from the substrate.` (no claims loaded: empty
+  or missing database)
 
 ### 9.5 `acknowledge`
 - `Noted. That would be a proposal — it needs a human seal before I can use it.`
@@ -266,7 +305,7 @@ Printed to stdout after each reply. Plain text, key: value lines.
       - claim_id=<id> score=<float> status=active subject=<s> object=<o> polarity=<p>
       - ...
     excluded:
-      - claim_id=<id> reason=<polarity_missing|status_excluded|capsule_invalid|signature_invalid>
+      - claim_id=<id> reason=<polarity_missing|polarity_invalid|status_excluded|capsule_invalid|field_missing>
       - ...
     template: <template_name>
     slots:
@@ -278,11 +317,23 @@ Printed to stdout after each reply. Plain text, key: value lines.
 
 Sections with no entries print `(none)`.
 
+`excluded` lists the excluded claims that would otherwise have been
+candidates for this input (subject or object match), so the trace says
+why a relevant claim was not used without listing the whole substrate.
+`field_missing` covers a missing `subject`, `object` or `created_at`.
+(`signature_invalid` arrives with v0.2-B.)
+
 ## 12. P9 access
 
 LLLM opens `forge.db` with SQLite URI `mode=ro`:
 
-    sqlite3.connect(f"file:{db_path}?mode=ro", uri=True)
+    sqlite3.connect(pathlib.Path(db_path).resolve().as_uri() + "?mode=ro", uri=True)
+
+(`Path.as_uri()` rather than an f-string, so a path containing a
+space, `#` or `?`, or a Windows drive, still opens read-only; the same
+form SCP Substrate and P9 v3 use.) The database path is `--db`, else
+`$FORGE_HOME/forge.db`, else `~/.forge/forge.db` (the stack
+convention).
 
 If the file does not exist, the REPL starts with zero claims and every
 question returns `unknown`. No exception is raised; no file is created.
@@ -290,38 +341,47 @@ question returns `unknown`. No exception is raised; no file is created.
 LLLM cannot write to P9. This is enforced at the SQLite layer, not by
 convention.
 
+## 12a. Package names
+
+The per-reply trace code lives in `traces/`, not `trace/`: a
+top-level `trace` package would shadow Python's standard-library
+`trace` module for anything run from the repository root.
+
 ## 13. v0.1 acceptance criteria
 
 Every criterion is a test case in `test_lllm.py`. Freeze requires all
 to pass.
 
-- [ ] Empty P9: every question returns `unknown`
-- [ ] A question matched by one active claim gets `answer`, citing its
+- [x] Empty P9: every question returns `unknown`
+- [x] A question matched by one active claim gets `answer`, citing its
       `claim_id`
-- [ ] Superseded and inactive claims are never used
-- [ ] A claim with polarity missing is never used, and the trace says
+- [x] Superseded and inactive claims are never used
+- [x] A claim with polarity missing is never used, and the trace says
       why (`polarity_missing`)
-- [ ] Two competing claims within δ that disagree get `clarify`
-- [ ] Two competing claims within δ that agree get `answer`, citing
+- [x] Two competing claims within δ that disagree get `clarify`
+- [x] Two competing claims within δ that agree get `answer`, citing
       both
-- [ ] A self-query with no `agent://lllm` claims gets `unknown`
-- [ ] A self-query once `agent://lllm` claims are seeded gets
+- [x] A self-query with no `agent://lllm` claims gets `unknown`
+- [x] A self-query once `agent://lllm` claims are seeded gets
       `explain_self`, with citations
-- [ ] A `trace_query` right after an `answer` returns the trace of that
+- [x] A `trace_query` right after an `answer` returns the trace of that
       answer
-- [ ] A `trace_query` before any reply returns `unknown`
-- [ ] A statement gets the fixed `acknowledge` reply, and P9 is
+- [x] A `trace_query` before any reply returns `unknown`
+- [x] A statement gets the fixed `acknowledge` reply, and P9 is
       unchanged (verified by file hash)
-- [ ] Greetings, thanks and farewells get `social`
-- [ ] Every reply prints a full trace: parse, candidates, plan and
+- [x] Greetings, thanks and farewells get `social`
+- [x] Every reply prints a full trace: parse, candidates, plan and
       reason, template, slots
-- [ ] No imports outside the standard library and P9
+- [x] No imports outside the standard library and P9
 - [ ] All tests pass in Termux
 
 ---
 
 ## Document control
 
-- SPEC v0.1.0 frozen at sign-off.
+- SPEC v0.1.0 signed off by James, 2026-11-13 ("fix documentation and
+  sign off and build v1"), after the pre-sign-off corrections marked
+  above (§5.4, §5.7, §6, §7, §8, §9.1, §9.4, §11, §12, §12a). Frozen
+  from here.
 - Changes require a new SPEC version. SPEC v0.2.0 describes v0.2.
 - Implementation of `lllm.py` v0.1.0 must match this spec.
