@@ -154,6 +154,12 @@ verify.
   **Resolved 2026-11-13, decided by the VS Code AI on James's delegation ("i sign, yo decide"):** SPEC 0.1.1 moves `clarify` above `question`
   and anchors its patterns.
 
+- **Q10. Freeze v0.1.2?** The Voice speaks face text and treats a
+  subject's aspects as aspects (SPEC_V0_1_2.md). Built and green on the
+  laptop (28/28); The Legacy v7 uses it. Not yet run on the S24. Raised
+  2026-11-13. Owner: James.
+  **Resolved 2026-11-13 — James: "freeze commmit and push".** Frozen on the laptop run; S24 run still to be confirmed.
+
 ## What LLLM refuses to be
 
 - A general-purpose chatbot. It answers from claims or says `unknown`.

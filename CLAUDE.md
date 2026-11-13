@@ -22,6 +22,8 @@ A v0.1 build imports nothing outside the standard library and P9.
 Run: `python lllm.py` (REPL) or `--once "text"`; tests: `python -m pytest -q`.
 The trace package is `traces/` (not `trace/`, SPEC §12a); FIXTURE.md is the test contract.
 Specs: SPEC.md is v0.1.0 as signed off (never edited); each later version is a new file of deltas (SPEC_V0_1_1.md, ...).
+0.1.1 code is frozen; 0.1.2 is new modules beside it (`know/v0_1_2.py`, `decide/v0_1_2.py`, `speak/v0_1_2.py`,
+entry `lllm_v0_1_2.py`, SPEC_V0_1_2.md: speaks face text, a subject's aspects together). Frozen 0.1.2.
 
 ## Architectural commitments (locked)
 - Polarity is required. A claim with no `capsule.polarity` is excluded

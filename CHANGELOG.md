@@ -16,6 +16,33 @@ CHANGELOG.md — build history for LLLM, latest entry at top.
 
 - (none)
 
+## [v0.1.2] — 2026-11-13 — FROZEN
+
+### Good
+
+- `SPEC_V0_1_2.md`, `test_lllm_v0_1_2.py` (8 tests, run red first) and new
+  modules `know/v0_1_2.py`, `decide/v0_1_2.py`, `speak/v0_1_2.py`,
+  `lllm_v0_1_2.py`: the Voice speaks a claim's asserted face text
+  ("ledger-layer (status): ledger_v2 is frozen at 2.0.0 ..."), counts that
+  text when ranking, and answers a subject's aspects together instead
+  of asking which one. OPINION, FICTION and UNKNOWN are never read.
+- Every FIXTURE.md query gives the same plan, template and reply as
+  0.1.1. 28/28 pass. The 0.1.1 code and SPEC.md are untouched. Decided
+  by the VS Code AI on James's delegation ("i sign, yo decide"; "all of
+  it"). Frozen at 0.1.2 (James: "freeze commmit and push", 2026-11-13); laptop run, S24 run
+  still to be confirmed.
+
+### Bad
+
+- Found 2026-11-13: asked about the 72 drafted repo claims, 0.1.1 said
+  "ledger-layer is status." and asked which of three claims was meant.
+
+### Ugly
+
+- Function words in face text are ignored when ranking (a fixed list in
+  SPEC_V0_1_2 §2); without it a text starting "The ..." outranked its
+  siblings.
+
 ## [v0.1.1] — 2026-11-13 — FROZEN
 
 ### Good
