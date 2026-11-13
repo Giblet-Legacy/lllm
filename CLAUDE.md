@@ -21,6 +21,7 @@ P13, P14, P15, P4, P1, P2). It does not rewrite them.
 A v0.1 build imports nothing outside the standard library and P9.
 Run: `python lllm.py` (REPL) or `--once "text"`; tests: `python -m pytest -q`.
 The trace package is `traces/` (not `trace/`, SPEC §12a); FIXTURE.md is the test contract.
+Specs: SPEC.md is v0.1.0 as signed off (never edited); each later version is a new file of deltas (SPEC_V0_1_1.md, ...).
 
 ## Architectural commitments (locked)
 - Polarity is required. A claim with no `capsule.polarity` is excluded
@@ -29,7 +30,7 @@ The trace package is `traces/` (not `trace/`, SPEC §12a); FIXTURE.md is the tes
   v0.2. Recorded as a Known Limitation.
 - `trace_query` is a first-class intent, distinct from `self_query`.
   "How did you work that out?" answers from the current turn's trace.
-- Intent precedence (SPEC 0.1.1): trace_query > self_query > clarify >
+- Intent precedence (SPEC_V0_1_1.md §1): trace_query > self_query > clarify >
   question > statement > greeting > farewell.
 - v0.4 conversation state is in-session only. Persistence arrives at
   v0.5 with signed traces.

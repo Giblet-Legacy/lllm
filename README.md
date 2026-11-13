@@ -16,7 +16,7 @@ No neural nets. No black-box weights. Just counting, rules, and claims.
 | **Consumed by** | The Cockpit, The Legacy, any conversational surface |
 | **Licence** | MSL-1.0 |
 | **Author** | James Gilbert (Giblets Forge) |
-| **Status** | 0.1.0-dev: v0.1 built, 20/20 tests on the laptop; Termux run before freeze |
+| **Status** | 0.1.1 frozen (2026-11-13): 20/20 tests on the laptop; S24 (Termux) run still to be confirmed |
 
 ### Dependencies by version
 

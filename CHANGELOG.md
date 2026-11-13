@@ -2,7 +2,21 @@
 
 CHANGELOG.md — build history for LLLM, latest entry at top.
 
-## [Unreleased] — SPEC 0.1.1 (2026-11-13)
+## [Unreleased]
+
+### Good
+
+- (none)
+
+### Bad
+
+- (none)
+
+### Ugly
+
+- (none)
+
+## [v0.1.1] — 2026-11-13 — FROZEN
 
 ### Good
 - James answered NOTES Q5–Q9 ("lllm should be stored in a different db
@@ -16,11 +30,18 @@ CHANGELOG.md — build history for LLLM, latest entry at top.
   citations; FICTION and OPINION refused (`polarity_missing`). 20/20.
 
 ### Bad
+- Frozen on the laptop run alone (2026-11-13); the S24 run is still to be confirmed.
+- 0.1.1 was first written into the signed-off SPEC.md in place
+  (`0117ee8`). Corrected: SPEC.md restored to the signed-off 0.1.0 text,
+  the changes moved to SPEC_V0_1_1.md (James: "make sure you are not
+  over writing and versioning like the claude.md requires").
 - That conversation found the two §7/§9.1 answer bugs ("what is blue?"
   → "Yes. sky is blue."), which the 0.1.0 tests had not covered.
 
 ### Ugly
-- (none)
+- `lllm.py`'s header still reads `Version: 0.1.0-dev`. It is committed
+  and frozen, so it is left as is (the stack's convention for stale
+  headers); VERSION is authoritative.
 
 ## [v0.1.0 build] — 2026-11-13
 

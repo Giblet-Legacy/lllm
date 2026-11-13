@@ -68,9 +68,9 @@ Notes on the rows:
   recent claim first.
 - "is the tide late?": two claims agree, so `answer` cites both.
 - "what is blue?": sky and sea score equally but have different
-  subjects, so neither clarify nor cite-both applies (SPEC 0.1.1 §7):
+  subjects, so neither clarify nor cite-both applies (SPEC_V0_1_1 §2):
   the most recent answers alone, and a WH-question never gets "Yes."
-  (§9.1).
-- "what do you mean?": a `clarify` intent (SPEC 0.1.1). In a fresh
+  (SPEC_V0_1_1 §3).
+- "what do you mean?": a `clarify` intent (SPEC_V0_1_1 §1). In a fresh
   session there is no previous reply to explain, so the plan is
   `unknown`. (Under SPEC 0.1.0 it parsed as a question; NOTES Q9.)

@@ -5,7 +5,7 @@ Function:
     Turns raw input into a structured parse: intent, terms, entities,
     negation and the raw text (SPEC §5, §6 "Terms"). Rule-based and
     deterministic: regex patterns per intent, chosen by the locked
-    precedence (SPEC 0.1.1) trace_query > self_query > clarify >
+    precedence (SPEC_V0_1_1 §1) trace_query > self_query > clarify >
     question > statement > greeting > farewell.
 
 Public API:
@@ -18,14 +18,14 @@ Internal helpers:
 
 Tier:     Tier 1 — Consumer (LLLM), layer 1
 Depends:  standard library only
-Spec:     SPEC.md 0.1.1 §5, §6
+Spec:     SPEC.md 0.1.0 §5, §6 + SPEC_V0_1_1.md §1
 Licence:  MSL-1.0
 Author:   James Gilbert (Giblets Forge)
 """
 
 import re
 
-PRECEDENCE = ("trace_query", "self_query", "clarify", "question", "statement", "greeting", "farewell")  # SPEC 0.1.1
+PRECEDENCE = ("trace_query", "self_query", "clarify", "question", "statement", "greeting", "farewell")  # SPEC_V0_1_1 §1
 
 PATTERNS = {
     "trace_query": [r"how (did|do) you (work|know|figure) (that|this|it) out", r"why did you (say|answer|reply)",

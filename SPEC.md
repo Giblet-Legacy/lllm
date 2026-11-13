@@ -8,7 +8,7 @@ Function:
 
 Tier:     Tier 1 — Consumer (The Voice)
 Depends:  P9 substrate-layer (read-only)
-Version:  SPEC 0.1.1
+Version:  SPEC 0.1.0
 Licence:  MSL-1.0
 Author:   James Gilbert (Giblets Forge)
 
@@ -82,15 +82,11 @@ highest-precedence intent whose pattern matches. Precedence:
 
 1. `trace_query`
 2. `self_query`
-3. `clarify`
-4. `question`
-5. `statement`
+3. `question`
+4. `statement`
+5. `clarify`
 6. `greeting`
 7. `farewell`
-
-(SPEC 0.1.1: `clarify` moved above `question`. Under 0.1.0, "what do
-you mean?", "can you clarify?" and "which one?" all parsed as
-questions, so the clarify intent was unreachable for them.)
 
 If no pattern matches, the default intent is `question`.
 
@@ -127,14 +123,10 @@ precedence.
 
 ### 5.5 `clarify`
 Patterns:
-- `^what do you mean`
-- `^can you (clarify|explain)`
-- `^i don'?t understand`
-- `^which one\b\W*$`
-
-(SPEC 0.1.1: anchored at the start, so a real question containing the
-words — "which one is bigger?" — stays a question; `which one` must
-stand alone.)
+- `what do you mean`
+- `can you (clarify|explain)`
+- `i don'?t understand`
+- `which one`
 
 ### 5.6 `greeting`
 Patterns:
@@ -193,20 +185,13 @@ Claim A ranks above B.
 Let `top1` and `top2` be the two highest-scoring candidates.
 
 **Clarify fires if all of these hold:**
-0. `top1` and `top2` have the **same subject** (case-insensitive;
-   SPEC 0.1.1).
 1. `top1.score - top2.score ≤ δ`, where `δ = 0.10 × top1.score`
    (relative margin, default 0.10, configurable via env
    `LLLM_CLARIFY_DELTA`).
 2. `top1` and `top2` disagree on **object** or **polarity**.
 
-**Different subjects (SPEC 0.1.1):** if `top1` and `top2` are within δ
-but have different subjects, they do not compete: LLLM answers with
-`top1` only. (Under 0.1.0, "what is blue?" with "sky is blue" and
-"sea is blue" would have cited the sky claim under "sea is blue".)
-
-**Agree case:** if `top1` and `top2` have the same subject, score within
-δ and agree on both object and polarity, LLLM answers and cites both: the `claim_id` slot
+**Agree case:** if `top1` and `top2` score within δ and agree on both
+object and polarity, LLLM answers and cites both: the `claim_id` slot
 holds both ids, comma-separated (`[a1b2c3d4e5f6, 0f9e8d7c6b5a]`).
 
 **No-clarify case:** if only one candidate exists, or the score gap
@@ -250,10 +235,8 @@ If `polarity == "negate"`, the template is rendered as:
 
 **Template choice** (deterministic):
 - `answer_yes` (`Yes. …`) or `answer_no` (`No. … not …`): the
-  question is a yes/no question (its first term is `is`, `are`, `was`,
-  `were`, `do`, `does`, `did`, `can`, `could`, `will`, `would` or
-  `should`; SPEC 0.1.1), names the claim's object (o = 1) and has no
-  negation of its own. "What is blue?" never gets `Yes.` "Is the sky blue?" with "sky is blue" → `Yes.`
+  question names the claim's object (o = 1) and has no negation of its
+  own. "Is the sky blue?" with "sky is blue" → `Yes.`
 - `answer_state` (`{subject} {predicate} {object}.`, or `… not …`
   for negate): every other answer. "Is the sky green?" with only
   "sky is blue" → "sky is blue.", never "Yes." (corrected before
@@ -396,10 +379,6 @@ to pass.
 
 ## Document control
 
-- **SPEC 0.1.1** — 2026-11-13, decided by the VS Code AI on James's delegation ("i sign, yo decide"): `clarify` above `question` in
-  the precedence, clarify patterns anchored (NOTES Q9); §7 clarify and cite-both need the same subject;
-  §9.1 `Yes.`/`No.` only for yes/no questions. Found by asking the
-  Voice through The Legacy on a Cockpit-written database.
 - SPEC v0.1.0 signed off by James, 2026-11-13 ("fix documentation and
   sign off and build v1"), after the pre-sign-off corrections marked
   above (§5.4, §5.7, §6, §7, §8, §9.1, §9.4, §11, §12, §12a). Frozen

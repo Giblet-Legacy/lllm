@@ -36,7 +36,7 @@ Fixtures and helpers:
     24. _manifest  — FIXTURE.md table rows
 
 Tier:     Tier 1 — Consumer (LLLM)
-Spec:     SPEC.md 0.1.1
+Spec:     SPEC.md 0.1.0 + SPEC_V0_1_1.md
 Licence:  MSL-1.0
 Author:   James Gilbert (Giblets Forge)
 """

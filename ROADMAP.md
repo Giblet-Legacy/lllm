@@ -148,7 +148,8 @@ Build in pipeline order. Each layer has its own mini-gate.
 - [x] No imports outside the standard library and P9
 - [ ] All tests pass in Termux
 
-**Freeze → tag `v0.1.0`.** Waiting on the Termux run only.
+**Frozen at 0.1.1 (James: "freeze", 2026-11-13),** with SPEC 0.1.1. The Termux run is
+still to be confirmed; tag after it.
 
 ---
 
