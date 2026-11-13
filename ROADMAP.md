@@ -146,10 +146,10 @@ Build in pipeline order. Each layer has its own mini-gate.
 - [x] Every reply prints a full trace: parse, candidates, plan and
       reason, template, slots
 - [x] No imports outside the standard library and P9
-- [ ] All tests pass in Termux
+- [x] All tests pass in Termux (James, 2026-11-13)
 
-**Frozen at 0.1.1 (James: "freeze", 2026-11-13),** with SPEC 0.1.1. The Termux run is
-still to be confirmed; tag after it.
+**Frozen at 0.1.1 (James: "freeze", 2026-11-13),** with SPEC 0.1.1. The Termux run was
+confirmed on the S24 by James, 2026-11-13. Ready to tag `v0.1.1`.
 
 ---
 
