@@ -2,6 +2,53 @@
 
 CHANGELOG.md — build history for LLLM, latest entry at top.
 
+## [v0.1.0] — The Voice Speaks
+
+### Good
+- `lllm_pipeline.py` implemented to SPEC v0.1.0.
+- 17/17 pytest tests pass.
+- Four-layer pipeline: Understand → Know → Decide → Speak.
+- P9 read-only via `mode=ro`. Verified by file-hash test.
+- Seven response plans: `answer`, `explain_self`, `trace`, `clarify`,
+  `unknown`, `acknowledge`, `social`.
+- Locked-slot rendering with mechanical verification.
+- Explicit exclusions: superseded, inactive, missing polarity (each
+  with a trace reason).
+- Self-model filtered by `agent://lllm` and bypasses scoring for
+  self_query intent.
+- REPL prints full trace on every reply.
+- Clarify requires same subject. Without this, "is the earth flat?"
+  compared unrelated claims (sky/sun) and produced nonsense. Fixed
+  before freeze.
+
+### Bad
+- No trust ranking. Recency is the tie-breaker. λ arrives in v0.2.
+- No signature verification on loaded claims. v0.1 trusts P9.
+  P1/P2 verification arrives in v0.2.
+- No n-gram phrasing. Replies are templated.
+- No proposals stored. Every statement returns the same
+  `acknowledge` template.
+- `_PREV_TRACE` is module-level state. Fine for the REPL; v0.4 will
+  formalise conversation state.
+- Match score formula is a first guess (subject×3, object×2, term×1).
+  Recorded in NOTES.md Q1; will tune against real conversations.
+
+### Ugly
+- First test run: 3 failures. Root causes:
+  - Clarify test used "is the apple red?" — the user specified the
+    object, so no clarify. Test case rewritten to "is the apple ripe?".
+  - Self-model claims scored 0 (no terms matched), so
+    `explain_self` never fired. Fixed by treating self_query as a
+    bypass-intent: include all agent://lllm claims regardless of
+    score.
+  - `_PREV_TRACE` leaked between tests. Added `reset()`.
+- Second discovery (during REPL proof): clarify fired on unrelated
+  subjects ("is the earth flat?" compared sky and sun). Fixed by
+  requiring `top1.subject == top2.subject`. New test added.
+- `_print_trace` referenced `trace['reply']` which doesn't exist
+  (reply is top-level). Removed the line. Tests didn't catch it
+  because tests don't print traces.
+
 ## [Unreleased]
 
 ### Good
