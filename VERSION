@@ -2,4 +2,9 @@
 # Function: the current release version of this consumer. Advances only on freeze.
 # 0.1.0 — The Voice speaks. Tests pass (17/17). P9-only. No n-gram, no buffer.
 
-0.1.0
+# 0.1.1 — SPEC_V0_1_1.md frozen 2026-11-13: clarify above question, Yes./No. only for yes/no questions. 20/20.
+
+# 0.1.2 — lllm_v0_1_2.py frozen 2026-11-13 (SPEC_V0_1_2.md: speaks a claim's asserted face text, a subject's aspects together). 28/28.
+#         This line advanced late, on 2026-11-16: the freezes left VERSION at 0.1.0.
+
+0.1.2

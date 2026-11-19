@@ -53,7 +53,9 @@ CHANGELOG.md — build history for LLLM, latest entry at top.
 
 ### Good
 
-- (none)
+- 2026-11-19: VERSION now reads 0.1.2, with the 0.1.1 and 0.1.2 freeze lines (James: "commit push and freeze").
+  Both versions were frozen on 2026-11-13 (entries below), but VERSION stayed at 0.1.0. The line was written
+  on 2026-11-16 and left uncommitted until the agents flagged it. No code changes. 25/25.
 
 ### Bad
 
